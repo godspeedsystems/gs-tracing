@@ -1,6 +1,6 @@
 {
   "name": "@godspeedsystems/tracing",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Enable opentelemetry tracing in Godspeed",
   "publishConfig": {
     "access": "public"
@@ -28,7 +28,7 @@
   "dependencies": {
     "@opentelemetry/api": "^1.6.0",
     "@opentelemetry/core": "^1.17.1",
-    "@opentelemetry/exporter-trace-otlp-proto": "^0.44.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.44.0",
     "@opentelemetry/instrumentation-express": "^0.33.2",
     "@opentelemetry/instrumentation-http": "^0.44.0",
     "@opentelemetry/instrumentation-pino": "^0.34.2",

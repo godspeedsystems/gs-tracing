@@ -9,7 +9,7 @@ import { PrismaInstrumentation } from '@prisma/instrumentation';
 
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
 import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-base';;
 
 let traceExporter;
