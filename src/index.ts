@@ -13,9 +13,38 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
 import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-base';;
 
 let traceExporter;
+let registeredInsrumentations:any = [];
+registeredInsrumentations.push(
+  new HttpInstrumentation({
+    requestHook: (span: any, request: any) => {
+      if (span.attributes.span_operation === 'INCOMING') {
+        span.updateName(span.name + " (Incoming)");
+
+        const spanCtx: SpanContext = span.spanContext();
+        span.setAttributes({
+          'traceId': spanCtx.traceId,
+          'spanId': spanCtx.spanId
+        });
+      } else {
+        span.updateName(span.name + " (Outgoing)");
+
+        const spanCtx: SpanContext = span.spanContext();
+        span.setAttributes({
+          'traceId': spanCtx.traceId,
+          'spanId': spanCtx.spanId
+        });
+      }
+    },
+    startIncomingSpanHook: (request: any) => {
+      return { span_operation: 'INCOMING' };
+    }
+  }),
+  new PrismaInstrumentation()
+);
 
 if (process.env.NODE_ENV != 'dev') {
   traceExporter = new OTLPTraceExporter();
+  registeredInsrumentations.push(new PinoInstrumentation({}));
 } else {
   traceExporter = new ConsoleSpanExporter();
   process.env.OTEL_TRACES_SAMPLER = 'parentbased_traceidratio';
@@ -26,34 +55,7 @@ diag.setLogger(new DiagConsoleLogger(), getEnv().OTEL_LOG_LEVEL);
 
 const sdk = new NodeSDK({
   traceExporter: traceExporter,
-  instrumentations: [
-      new HttpInstrumentation({
-      requestHook: (span: any, request: any) => {
-        if (span.attributes.span_operation === 'INCOMING') {
-          span.updateName(span.name + " (Incoming)");
-
-          const spanCtx: SpanContext = span.spanContext();
-          span.setAttributes({
-            'traceId': spanCtx.traceId,
-            'spanId': spanCtx.spanId
-          });
-        } else {
-          span.updateName(span.name + " (Outgoing)");
-
-          const spanCtx: SpanContext = span.spanContext();
-          span.setAttributes({
-            'traceId': spanCtx.traceId,
-            'spanId': spanCtx.spanId
-          });
-        }
-      },
-      startIncomingSpanHook: (request: any) => {
-        return { span_operation: 'INCOMING' };
-      }
-    }),
-    new PinoInstrumentation({}),
-    new PrismaInstrumentation()
-  ]
+  instrumentations: registeredInsrumentations
 });
 
 export const initialize = () => {
