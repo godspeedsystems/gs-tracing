@@ -41,10 +41,10 @@ registeredInsrumentations.push(
   }),
   new PrismaInstrumentation()
 );
+registeredInsrumentations.push(new PinoInstrumentation({}));
 
 if (process.env.NODE_ENV != 'dev') {
   traceExporter = new OTLPTraceExporter();
-  registeredInsrumentations.push(new PinoInstrumentation({}));
 } else {
   traceExporter = new ConsoleSpanExporter();
   process.env.OTEL_TRACES_SAMPLER = 'parentbased_traceidratio';

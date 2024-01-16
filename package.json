@@ -1,6 +1,6 @@
 {
   "name": "@godspeedsystems/tracing",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Enable opentelemetry tracing in Godspeed",
   "publishConfig": {
     "access": "public"
@@ -34,7 +34,7 @@
     "@opentelemetry/instrumentation-pino": "^0.34.2",
     "@opentelemetry/sdk-node": "^0.44.0",
     "@opentelemetry/sdk-trace-base": "^1.17.1",
-    "@prisma/instrumentation": "^5.4.2"
+    "@prisma/instrumentation": "5.4.2"
   },
   "devDependencies": {
     "@types/node": "^20.8.4",
